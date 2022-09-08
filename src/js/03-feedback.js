@@ -36,7 +36,16 @@ function dataFromLocalStorage() {
   const email = document.querySelector('.feedback-form input');
   const message = document.querySelector('.feedback-form textarea');
   if (data) {
-    email.value = data.email;
-    message.value = data.message;
+    email.value = data.email || '';
+    message.value = data.message || '';
   }
 }
+
+// function restoreFormData() {
+//   const message = localStorage.getItem(USER_KEY);
+//   if (message) {
+//     formData = JSON.parse(message);
+//     formRef.email.value = formData.email || '';
+//     formRef.message.value = formData.message || '';
+//   }
+// }
