@@ -11,41 +11,39 @@ import throttle from 'lodash.throttle';
 
 const LOCALESTORAGE_KEY = 'feedback-form-state';
 
+let formData = {};
+
+const refs = {
+  inputFormFeedback: document.querySelector('.feedback-form'),
+  inputFormEmail: document.querySelector('[type="email"]'),
+  inputFormMessage: document.querySelector('[name="message"]'),
+  inputFormSubmitBtn: document.querySelector('[type="submit"]'),
+};
+
 dataFromLocalStorage();
 
-const form = document.querySelector('.feedback-form');
-form.addEventListener('input', throttle(onFormData, 500));
-form.addEventListener('submit', onSubmitForm);
-
-const formData = {};
+refs.inputFormFeedback.addEventListener('input', throttle(onFormData, 500));
+refs.inputFormFeedback.addEventListener('submit', onSubmitForm);
 
 function onFormData(e) {
   formData[e.target.name] = e.target.value;
-  localStorage.setItem('feedback-form-state', JSON.stringify(formData));
+  localStorage.setItem(LOCALESTORAGE_KEY, JSON.stringify(formData));
 }
 
 function onSubmitForm(e) {
-  console.log(JSON.parse(localStorage.getItem(LOCALESTORAGE_KEY)));
+  console.log(formData);
   e.preventDefault();
   e.currentTarget.reset();
   localStorage.removeItem(LOCALESTORAGE_KEY);
+  formData = {};
 }
 
 function dataFromLocalStorage() {
-  const data = JSON.parse(localStorage.getItem(LOCALESTORAGE_KEY));
-  const email = document.querySelector('.feedback-form input');
-  const message = document.querySelector('.feedback-form textarea');
+  const data = localStorage.getItem(LOCALESTORAGE_KEY);
+
   if (data) {
-    email.value = data.email || '';
-    message.value = data.message || '';
+    formData = JSON.parse(data);
+    refs.inputFormEmail.value = formData.email || '';
+    refs.inputFormMessage.value = formData.message || '';
   }
 }
-
-// function restoreFormData() {
-//   const message = localStorage.getItem(USER_KEY);
-//   if (message) {
-//     formData = JSON.parse(message);
-//     formRef.email.value = formData.email || '';
-//     formRef.message.value = formData.message || '';
-//   }
-// }
